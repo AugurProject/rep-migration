@@ -28,12 +28,21 @@ function getRepTransferLogsChunked(fromBlock, callback) {
     topics: [legacyRepTransferSignature]
   };
   rpc.getLogs(filter, (logs) => {
-    console.log("got", logs.length, "transfer logs");
+    console.log("got", logs.length, "transfer logs between blocks", fromBlock, "and", toBlock);
     logs.forEach((log) => {
-      const fromAddress = abi.format_address(log.topics[1]);
       const toAddress = abi.format_address(log.topics[2]);
-      if (allRepAddresses.indexOf(fromAddress) === -1) allRepAddresses.push(fromAddress);
-      if (allRepAddresses.indexOf(toAddress) === -1) allRepAddresses.push(toAddress);
+      if (allRepAddresses.indexOf(toAddress) === -1) {
+        rpc.callContractFunction({
+          method: "balanceOf",
+          params: [toAddress],
+          signature: ["address"],
+          to: legacyRepContractAddress
+        }, (toAddressRepBalance) => {
+          if (toAddressRepBalance !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
+            allRepAddresses.push(toAddress);
+          }
+        });
+      }
     });
     if (toBlock !== "latest") return getRepTransferLogsChunked(toBlock, callback);
     writeAddressListToFile(callback);
