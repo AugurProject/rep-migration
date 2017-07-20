@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/tinybike/rep-migration-scripts#readme",
   "dependencies": {
+    "async": "2.5.0",
     "augur-abi": "1.2.1",
     "ethrpc": "4.1.3"
   }
