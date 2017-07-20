@@ -42,6 +42,7 @@ function getRepTransferLogsChunked(fromBlock, callback) {
     topics: [LEGACY_REP_TRANSFER_SIGNATURE]
   }, (logs) => {
     console.log("got", logs.length, "transfer logs between blocks", fromBlock, "and", toBlock);
+    if (!logs.length) return getRepTransferLogsChunked(toBlock, callback);
     async.eachSeries(logs, (log, nextLog) => {
       const toAddress = abi.format_address(log.topics[2]);
       if (allRepAddresses.indexOf(toAddress) !== -1) return nextLog();
