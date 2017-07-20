@@ -1,0 +1,23 @@
+{
+  "name": "rep-migration-scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "scripts/get-all-rep-addresses.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tinybike/rep-migration-scripts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tinybike/rep-migration-scripts/issues"
+  },
+  "homepage": "https://github.com/tinybike/rep-migration-scripts#readme",
+  "dependencies": {
+    "augur-abi": "1.2.1",
+    "ethrpc": "4.1.3"
+  }
+}
