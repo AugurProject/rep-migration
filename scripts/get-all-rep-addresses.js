@@ -9,7 +9,7 @@ const abi = require("augur-abi");
 const LEGACY_REP_CONTRACT_ADDRESS = "0x48c80F1f4D53D5951e5D5438B54Cba84f29F32a5";
 const LEGACY_REP_TRANSFER_SIGNATURE = "0x" + abi.keccak_256("Transfer(address,address,uint256)");
 const LEGACY_REP_CONTRACT_UPLOAD_BLOCK = 2378196;
-const LEGACY_REP_FREEZE_BLOCK = process.env.LEGACY_REP_FREEZE_BLOCK || 4046935;
+const LEGACY_REP_FREEZE_BLOCK = process.env.LEGACY_REP_FREEZE_BLOCK || 4050727;
 const BLOCKS_PER_CHUNK = 5000;
 const REP_ADDRESS_FILE = path.join(__dirname, "..", "data", "all-rep-addresses.txt");
 
@@ -34,7 +34,9 @@ function checkRepBalance(address, callback) {
 }
 
 function getRepTransferLogsChunked(fromBlock, callback) {
-  const toBlock = (fromBlock + BLOCKS_PER_CHUNK > LEGACY_REP_FREEZE_BLOCK) ? "latest" : fromBlock + BLOCKS_PER_CHUNK;
+  if (fromBlock === "latest") return writeAddressListToFile(callback);
+  let toBlock = fromBlock + BLOCKS_PER_CHUNK - 1;
+  if (toBlock > LEGACY_REP_FREEZE_BLOCK) toBlock = "latest";
   rpc.getLogs({
     fromBlock: fromBlock,
     toBlock: toBlock,
@@ -47,10 +49,7 @@ function getRepTransferLogsChunked(fromBlock, callback) {
       const toAddress = abi.format_address(log.topics[2]);
       if (allRepAddresses.indexOf(toAddress) !== -1) return nextLog();
       checkRepBalance(toAddress, nextLog);
-    }, () => {
-      if (toBlock !== "latest") return getRepTransferLogsChunked(toBlock, callback);
-      writeAddressListToFile(callback);
-    });
+    }, () => getRepTransferLogsChunked(toBlock, callback));
   });
 }
 
