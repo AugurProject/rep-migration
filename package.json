@@ -1,10 +1,10 @@
 {
-  "name": "rep-migration-scripts",
+  "name": "rep-migration",
   "version": "1.0.0",
   "description": "",
   "main": "scripts/get-all-rep-addresses.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
