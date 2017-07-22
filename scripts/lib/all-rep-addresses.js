@@ -14,7 +14,7 @@ function writeAddressListToFile(repAddressFile, allRepAddresses, callback) {
 
 function checkRepBalance(rpc, address, callback) {
   rpc.callContractFunction({
-    method: "balanceOf",
+    name: "balanceOf",
     params: [address],
     signature: ["address"],
     to: LEGACY_REP_CONTRACT_ADDRESS

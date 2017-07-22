@@ -1,12 +1,13 @@
-#!/usr/bin/env node
-
+const fs = require("fs");
 const path = require("path");
 const rpc = require("ethrpc");
-const getAllRepAddresses = require("./lib/all-rep-addresses").getAllRepAddresses;
+const migrateRep = require("./lib/migrate-rep").migrateRep;
 
-const LEGACY_REP_CONTRACT_UPLOAD_BLOCK = 2378196;
+const LEGACY_REP_CONTRACT_UPLOAD_BLOCK = parseInt(process.env.LEGACY_REP_CONTRACT_UPLOAD_BLOCK, 10);
 const REP_ADDRESS_FILE = path.join(__dirname, "..", "data", "all-rep-addresses.txt");
-const allRepAddresses = [];
+
+const allRepAddresses = fs.readFileSync(REP_ADDRESS_FILE, "utf8").split("\n");
+console.log("Loaded", allRepAddresses.length, "addresses");
 
 rpc.setDebugOptions({ connect: true, broadcast: false });
 
@@ -18,7 +19,7 @@ rpc.connect({
   ipcAddresses: ["/home/jack/.ethereum-1/geth.ipc"],
   errorHandler: () => {}
 }, () => {
-  getAllRepAddresses(rpc, allRepAddresses, REP_ADDRESS_FILE, LEGACY_REP_CONTRACT_UPLOAD_BLOCK, (err) => {
+  migrateRep(rpc, allRepAddresses, (err) => {
     console.log("Time elapsed:", (Date.now() - startTime) / 1000 / 60, "minutes");
     if (err) console.error(err);
     process.exit(0);
