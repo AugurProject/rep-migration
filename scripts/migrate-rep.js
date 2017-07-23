@@ -15,7 +15,7 @@ const startTime = Date.now();
 rpc.connect({
   httpAddresses: ["http://127.0.0.1:8545"],
   wsAddresses: ["ws://127.0.0.1:8546"],
-  ipcAddresses: ["/home/jack/.ethereum-1/geth.ipc"],
+  ipcAddresses: [path.join(process.env.HOME, ".ethereum", "geth.ipc")],
   errorHandler: () => {}
 }, () => {
   migrateRep(rpc, allRepAddresses, (err) => {
