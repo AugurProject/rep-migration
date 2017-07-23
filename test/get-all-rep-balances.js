@@ -7,7 +7,6 @@ const constants = require("../lib/constants");
 const lib = require("../lib/all-rep-addresses");
 
 const LegacyRepToken = artifacts.require("LegacyRepToken");
-const RepToken = artifacts.require("RepToken");
 
 const TEST_REP_ADDRESS_FILE = path.join(__dirname, "test-rep-address-file.txt");
 

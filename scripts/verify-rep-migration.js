@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const rpc = require("ethrpc");
-const verifyRepMigration = require("./lib/verify-rep-migration").verifyRepMigration;
+const verifyRepMigration = require("../lib/verify-rep-migration").verifyRepMigration;
 
 const REP_ADDRESS_FILE = path.join(__dirname, "..", "data", "all-rep-addresses.txt");
 

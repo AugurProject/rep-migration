@@ -2,8 +2,8 @@
 
 const path = require("path");
 const rpc = require("ethrpc");
-const constants = require("./constants");
-const getAllRepAddresses = require("./lib/all-rep-addresses").getAllRepAddresses;
+const constants = require("../lib/constants");
+const getAllRepAddresses = require("../lib/all-rep-addresses").getAllRepAddresses;
 
 const allRepAddresses = [];
 

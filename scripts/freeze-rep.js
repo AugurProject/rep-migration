@@ -2,7 +2,7 @@
 
 const path = require("path");
 const rpc = require("ethrpc");
-const freezeRep = require("./lib/freeze-rep");
+const freezeRep = require("../lib/freeze-rep");
 
 rpc.setDebugOptions({ connect: true, broadcast: false });
 

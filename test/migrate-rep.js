@@ -1,6 +1,11 @@
 const assert = require("chai").assert;
+const BigNumber = require("bignumber.js");
+const rpc = require("ethrpc");
 const lib = require("../lib/migrate-rep");
 const constants = require("../lib/constants");
+
+const LegacyRepToken = artifacts.require("LegacyRepToken");
+const RepToken = artifacts.require("RepToken");
 
 describe("lib/migrate-rep", () => {
   describe("chunkRepAddresses", () => {
@@ -99,7 +104,7 @@ describe("lib/migrate-rep", () => {
   });
   describe("migrateRepChunk", () => {
     const test = t => it(t.description, () => {
-      lib.migrateRepChunk(t.params.rpc, t.params.repAddressChunk, t.assertions);
+      lib.migrateRepChunk(t.params.rpc, t.params.repAddressChunk, t.params.repContractAddress, t.assertions);
     });
     test({
       description: "Migrate a chunk of Rep addresses",
@@ -108,11 +113,11 @@ describe("lib/migrate-rep", () => {
           getCoinbase: () => "0x1000000000000000000000000000000000000000",
           transact: (p) => {
             assert.strictEqual(p.name, "migrateBalances");
-            assert.deepEqual(p.params, [
+            assert.deepEqual(p.params, [[
               "0x0000000000000000000000000000000000000b0b",
               "0x000000000000000000000000000000000000d00d",
               "0x0000000000000000000000000000000000001337"
-            ]);
+            ]]);
             assert.strictEqual(p.from, "0x1000000000000000000000000000000000000000");
             assert.strictEqual(p.to, constants.REP_CONTRACT_ADDRESS);
             assert.strictEqual(p.returns, "null");
@@ -126,7 +131,8 @@ describe("lib/migrate-rep", () => {
           "0x0000000000000000000000000000000000000b0b",
           "0x000000000000000000000000000000000000d00d",
           "0x0000000000000000000000000000000000001337"
-        ]
+        ],
+        repContractAddress: constants.REP_CONTRACT_ADDRESS
       },
       assertions: (err) => {
         assert.isNull(err);
@@ -135,7 +141,7 @@ describe("lib/migrate-rep", () => {
   });
   describe("migrateRep", () => {
     const test = t => it(t.description, () => {
-      lib.migrateRep(t.params.rpc, t.params.allRepAddresses, t.assertions);
+      lib.migrateRep(t.params.rpc, t.params.allRepAddresses, t.params.repContractAddress, t.assertions);
     });
     test({
       description: "Migrate Rep",
@@ -144,11 +150,11 @@ describe("lib/migrate-rep", () => {
           getCoinbase: () => "0x1000000000000000000000000000000000000000",
           transact: (p) => {
             assert.strictEqual(p.name, "migrateBalances");
-            assert.deepEqual(p.params, [
+            assert.deepEqual(p.params, [[
               "0x0000000000000000000000000000000000000b0b",
               "0x000000000000000000000000000000000000d00d",
               "0x0000000000000000000000000000000000001337"
-            ]);
+            ]]);
             assert.strictEqual(p.from, "0x1000000000000000000000000000000000000000");
             assert.strictEqual(p.to, constants.REP_CONTRACT_ADDRESS);
             assert.strictEqual(p.returns, "null");
@@ -162,7 +168,8 @@ describe("lib/migrate-rep", () => {
           "0x0000000000000000000000000000000000000b0b",
           "0x000000000000000000000000000000000000d00d",
           "0x0000000000000000000000000000000000001337"
-        ]
+        ],
+        repContractAddress: constants.REP_CONTRACT_ADDRESS
       },
       assertions: (err) => {
         assert.isNull(err);
@@ -173,13 +180,14 @@ describe("lib/migrate-rep", () => {
     const nonZeroAmount1 = new BigNumber(4000, 10);
     const nonZeroAmount2 = new BigNumber(8000, 10);
     const totalAmount = nonZeroAmount1.plus(nonZeroAmount2);
-    let legacyRep;
+    let legacyRep, rep;
     before(async function () {
       legacyRep = await LegacyRepToken.new({ from: owner });
       await legacyRep.assign(zeroHolder, totalAmount);
       await legacyRep.unpause({ from: owner });
       await legacyRep.transfer(nonZeroHolder1, nonZeroAmount1, { from: zeroHolder });
       await legacyRep.transfer(nonZeroHolder2, nonZeroAmount2, { from: zeroHolder });
+      rep = await RepToken.new(legacyRep.address, { from: owner });
     });
     it("Should migrate REP held by nonZeroHolder1 and nonZeroHolder2", (done) => {
       rpc.connect({
@@ -190,7 +198,7 @@ describe("lib/migrate-rep", () => {
       }, () => {
         assert.notEqual(rpc.getNetworkID(), "1");
         rpc.eth.blockNumber((blockNumber) => {
-          lib.migrateRep(rpc, [nonZeroHolder1, nonZeroHolder2], (err) => {
+          lib.migrateRep(rpc, [nonZeroHolder1, nonZeroHolder2], rep.address, (err) => {
             assert.isNull(err);
             rpc.resetState();
             done();
