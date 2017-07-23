@@ -104,7 +104,7 @@ describe("lib/migrate-rep", () => {
   });
   describe("migrateRepChunk", () => {
     const test = t => it(t.description, () => {
-      lib.migrateRepChunk(t.params.rpc, t.params.repAddressChunk, t.params.repContractAddress, t.assertions);
+      lib.migrateRepChunk(t.params.rpc, t.params.repAddressChunk, t.params.repContractAddress, t.params.senderAddress, t.assertions);
     });
     test({
       description: "Migrate a chunk of Rep addresses",
@@ -132,7 +132,8 @@ describe("lib/migrate-rep", () => {
           "0x000000000000000000000000000000000000d00d",
           "0x0000000000000000000000000000000000001337"
         ],
-        repContractAddress: constants.REP_CONTRACT_ADDRESS
+        repContractAddress: constants.REP_CONTRACT_ADDRESS,
+        senderAddress: "0x1000000000000000000000000000000000000000"
       },
       assertions: (err) => {
         assert.isNull(err);
@@ -141,13 +142,12 @@ describe("lib/migrate-rep", () => {
   });
   describe("migrateRep", () => {
     const test = t => it(t.description, () => {
-      lib.migrateRep(t.params.rpc, t.params.allRepAddresses, t.params.repContractAddress, t.assertions);
+      lib.migrateRep(t.params.rpc, t.params.allRepAddresses, t.params.repContractAddress, t.params.senderAddress, t.assertions);
     });
     test({
       description: "Migrate Rep",
       params: {
         rpc: {
-          getCoinbase: () => "0x1000000000000000000000000000000000000000",
           transact: (p) => {
             assert.strictEqual(p.name, "migrateBalances");
             assert.deepEqual(p.params, [[
@@ -169,7 +169,8 @@ describe("lib/migrate-rep", () => {
           "0x000000000000000000000000000000000000d00d",
           "0x0000000000000000000000000000000000001337"
         ],
-        repContractAddress: constants.REP_CONTRACT_ADDRESS
+        repContractAddress: constants.REP_CONTRACT_ADDRESS,
+        senderAddress: "0x1000000000000000000000000000000000000000"
       },
       assertions: (err) => {
         assert.isNull(err);
@@ -198,7 +199,7 @@ describe("lib/migrate-rep", () => {
       }, () => {
         assert.notEqual(rpc.getNetworkID(), "1");
         rpc.eth.blockNumber((blockNumber) => {
-          lib.migrateRep(rpc, [nonZeroHolder1, nonZeroHolder2], rep.address, (err) => {
+          lib.migrateRep(rpc, [nonZeroHolder1, nonZeroHolder2], rep.address, owner, (err) => {
             assert.isNull(err);
             rpc.resetState();
             done();
