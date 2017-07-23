@@ -1,8 +1,8 @@
 const assert = require("chai").assert;
-const freezeRep = require("../scripts/lib/freeze-rep");
-const constants = require("../scripts/lib/constants");
+const freezeRep = require("../lib/freeze-rep");
+const constants = require("../lib/constants");
 
-describe("scripts/lib/freeze-rep", () => {
+describe("lib/freeze-rep", () => {
   describe("freezeRep", () => {
     const test = t => it(t.description, () => {
       freezeRep(t.params.rpc, t.assertions);

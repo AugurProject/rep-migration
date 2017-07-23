@@ -1,8 +1,8 @@
 const assert = require("chai").assert;
-const lib = require("../scripts/lib/verify-rep-migration");
-const constants = require("../scripts/lib/constants");
+const lib = require("../lib/verify-rep-migration");
+const constants = require("../lib/constants");
 
-describe("scripts/lib/verify-rep-migration", () => {
+describe("lib/verify-rep-migration", () => {
   describe("verifySingleAddressRepMigration", () => {
     const test = t => it(t.description, () => {
       lib.verifySingleAddressRepMigration(t.params.rpc, t.params.repAddress, t.assertions);

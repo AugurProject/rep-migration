@@ -1,8 +1,8 @@
 const assert = require("chai").assert;
-const lib = require("../scripts/lib/migrate-rep");
-const constants = require("../scripts/lib/constants");
+const lib = require("../lib/migrate-rep");
+const constants = require("../lib/constants");
 
-describe("scripts/lib/migrate-rep", () => {
+describe("lib/migrate-rep", () => {
   describe("chunkRepAddresses", () => {
     const test = t => it(t.description, () => {
       t.assertions(lib.chunkRepAddresses(t.params.allRepAddresses, t.params.addressesPerChunk));
@@ -167,6 +167,36 @@ describe("scripts/lib/migrate-rep", () => {
       assertions: (err) => {
         assert.isNull(err);
       }
+    });
+  });
+  contract("RepToken", function ([_, owner, zeroHolder, nonZeroHolder1, nonZeroHolder2]) {
+    const nonZeroAmount1 = new BigNumber(4000, 10);
+    const nonZeroAmount2 = new BigNumber(8000, 10);
+    const totalAmount = nonZeroAmount1.plus(nonZeroAmount2);
+    let legacyRep;
+    before(async function () {
+      legacyRep = await LegacyRepToken.new({ from: owner });
+      await legacyRep.assign(zeroHolder, totalAmount);
+      await legacyRep.unpause({ from: owner });
+      await legacyRep.transfer(nonZeroHolder1, nonZeroAmount1, { from: zeroHolder });
+      await legacyRep.transfer(nonZeroHolder2, nonZeroAmount2, { from: zeroHolder });
+    });
+    it("Should migrate REP held by nonZeroHolder1 and nonZeroHolder2", (done) => {
+      rpc.connect({
+        httpAddresses: ["http://127.0.0.1:8545"],
+        wsAddresses: [],
+        ipcAddresses: [],
+        errorHandler: () => {}
+      }, () => {
+        assert.notEqual(rpc.getNetworkID(), "1");
+        rpc.eth.blockNumber((blockNumber) => {
+          lib.migrateRep(rpc, [nonZeroHolder1, nonZeroHolder2], (err) => {
+            assert.isNull(err);
+            rpc.resetState();
+            done();
+          });
+        });
+      });
     });
   });
 });

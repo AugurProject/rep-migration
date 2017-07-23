@@ -4,25 +4,30 @@
   "description": "",
   "main": "scripts/get-all-rep-addresses.js",
   "scripts": {
-    "test": "mocha"
+    "test": "scripts/test.sh"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tinybike/rep-migration-scripts.git"
+    "url": "git+https://github.com/tinybike/rep-migration.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tinybike/rep-migration-scripts/issues"
+    "url": "https://github.com/tinybike/rep-migration/issues"
   },
-  "homepage": "https://github.com/tinybike/rep-migration-scripts#readme",
+  "homepage": "https://github.com/tinybike/rep-migration#readme",
   "dependencies": {
     "async": "2.5.0",
     "augur-abi": "1.3.0",
     "ethrpc": "4.2.0"
   },
   "devDependencies": {
+    "bignumber.js": "^4.0.2",
     "chai": "^4.1.0",
-    "mocha": "^3.4.2"
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^2.0.1",
+    "ethereumjs-testrpc": "^3.0.2",
+    "truffle": "^3.4.4",
+    "zeppelin-solidity": "^1.2.0"
   }
 }
