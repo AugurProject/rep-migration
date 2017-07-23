@@ -2,11 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const async = require("async");
 const abi = require("augur-abi");
-
-const LEGACY_REP_CONTRACT_ADDRESS = "0x48c80F1f4D53D5951e5D5438B54Cba84f29F32a5";
-const LEGACY_REP_TRANSFER_SIGNATURE = "0x" + abi.keccak_256("Transfer(address,address,uint256)");
-const LEGACY_REP_FREEZE_BLOCK = parseInt(process.env.LEGACY_REP_FREEZE_BLOCK || 4051551, 10);
-const BLOCKS_PER_CHUNK = 5000;
+const constants = require("./constants");
 
 function writeAddressListToFile(repAddressFile, allRepAddresses, callback) {
   fs.writeFile(repAddressFile, allRepAddresses.join("\n"), "utf8", (err) => callback(err, allRepAddresses));
@@ -17,7 +13,7 @@ function checkRepBalance(rpc, address, callback) {
     name: "balanceOf",
     params: [address],
     signature: ["address"],
-    to: LEGACY_REP_CONTRACT_ADDRESS
+    to: constants.LEGACY_REP_CONTRACT_ADDRESS
   }, (repBalance) => {
     if (repBalance !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
       return callback(address);
@@ -27,15 +23,15 @@ function checkRepBalance(rpc, address, callback) {
 }
 
 function getAllRepAddresses(rpc, allRepAddresses, repAddressFile, fromBlock, callback) {
-  if (fromBlock > LEGACY_REP_FREEZE_BLOCK) {
+  if (fromBlock > constants.LEGACY_REP_FREEZE_BLOCK) {
     return writeAddressListToFile(repAddressFile, allRepAddresses, callback);
   }
-  const toBlock = Math.min(fromBlock + BLOCKS_PER_CHUNK, LEGACY_REP_FREEZE_BLOCK);
+  const toBlock = Math.min(fromBlock + constants.BLOCKS_PER_CHUNK, constants.LEGACY_REP_FREEZE_BLOCK);
   rpc.getLogs({
     fromBlock: fromBlock,
     toBlock: toBlock,
-    address: LEGACY_REP_CONTRACT_ADDRESS,
-    topics: [LEGACY_REP_TRANSFER_SIGNATURE]
+    address: constants.LEGACY_REP_CONTRACT_ADDRESS,
+    topics: [constants.LEGACY_REP_TRANSFER_SIGNATURE]
   }, (logs) => {
     console.log("got", logs.length, "transfer logs between blocks", fromBlock, "and", toBlock);
     if (!logs.length) return getAllRepAddresses(rpc, allRepAddresses, repAddressFile, toBlock + 1, callback);

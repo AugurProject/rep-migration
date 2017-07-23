@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const rpc = require("ethrpc");
-const migrateRep = require("./lib/migrate-rep").migrateRep;
+const verifyRepMigration = require("./lib/verify-rep-migration").verifyRepMigration;
 
 const REP_ADDRESS_FILE = path.join(__dirname, "..", "data", "all-rep-addresses.txt");
 
@@ -18,7 +18,7 @@ rpc.connect({
   ipcAddresses: ["/home/jack/.ethereum-1/geth.ipc"],
   errorHandler: () => {}
 }, () => {
-  migrateRep(rpc, allRepAddresses, (err) => {
+  verifyRepMigration(rpc, allRepAddresses, (err) => {
     console.log("Time elapsed:", (Date.now() - startTime) / 1000 / 60, "minutes");
     if (err) console.error(err);
     process.exit(0);
