@@ -36,10 +36,11 @@ contract RepToken is StandardToken, Ownable, PausableToken {
     * @param _holders Array of addresses to migrate balance
     * @return True if operation was completed
     */
-  function migrateBalances(address[] _holders) onlyOwner whenPaused {
+  function migrateBalances(address[] _holders) onlyOwner whenPaused returns (bool) {
     for (uint256 i = 0; i < _holders.length; i++) {
       migrateBalance(_holders[i]);
     }
+    return true;
   }
 
   /**
