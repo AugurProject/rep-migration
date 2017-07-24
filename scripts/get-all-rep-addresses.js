@@ -14,7 +14,7 @@ const startTime = Date.now();
 rpc.connect({
   httpAddresses: ["http://127.0.0.1:8545"],
   wsAddresses: ["ws://127.0.0.1:8546"],
-  ipcAddresses: [path.join(process.env.HOME, ".ethereum", "geth.ipc")],
+  ipcAddresses: [process.env.GETH_IPC || path.join(process.env.HOME, ".ethereum", "geth.ipc")],
   errorHandler: () => {}
 }, () => {
   getAllRepAddresses(rpc, allRepAddresses, constants.LEGACY_REP_CONTRACT_ADDRESS, constants.REP_ADDRESS_FILE, constants.LEGACY_REP_CONTRACT_UPLOAD_BLOCK, constants.LEGACY_REP_FREEZE_BLOCK, constants.BLOCKS_PER_CHUNK, (err) => {
