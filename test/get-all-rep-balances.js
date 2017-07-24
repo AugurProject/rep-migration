@@ -91,8 +91,8 @@ describe("lib/all-rep-balances", () => {
         allRepAddresses: [],
         legacyRepContractAddress: constants.LEGACY_REP_CONTRACT_ADDRESS,
         repAddressFile: TEST_REP_ADDRESS_FILE,
-        fromBlock: 4050551,
-        legacyRepFreezeBlock: constants.LEGACY_REP_FREEZE_BLOCK,
+        fromBlock: 10,
+        legacyRepFreezeBlock: 11,
         blocksPerChunk: constants.BLOCKS_PER_CHUNK
       },
       assertions: (err, allRepAddresses) => {
@@ -117,8 +117,8 @@ describe("lib/all-rep-balances", () => {
         allRepAddresses: [],
         legacyRepContractAddress: constants.LEGACY_REP_CONTRACT_ADDRESS,
         repAddressFile: TEST_REP_ADDRESS_FILE,
-        fromBlock: 4050551,
-        legacyRepFreezeBlock: constants.LEGACY_REP_FREEZE_BLOCK,
+        fromBlock: 10,
+        legacyRepFreezeBlock: 11,
         blocksPerChunk: constants.BLOCKS_PER_CHUNK
       },
       assertions: (err, allRepAddresses) => {
@@ -143,8 +143,8 @@ describe("lib/all-rep-balances", () => {
         allRepAddresses: [],
         legacyRepContractAddress: constants.LEGACY_REP_CONTRACT_ADDRESS,
         repAddressFile: TEST_REP_ADDRESS_FILE,
-        fromBlock: 4050551,
-        legacyRepFreezeBlock: constants.LEGACY_REP_FREEZE_BLOCK,
+        fromBlock: 10,
+        legacyRepFreezeBlock: 11,
         blocksPerChunk: constants.BLOCKS_PER_CHUNK
       },
       assertions: (err, allRepAddresses) => {

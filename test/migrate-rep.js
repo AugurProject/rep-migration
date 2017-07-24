@@ -111,7 +111,7 @@ describe("lib/migrate-rep", () => {
       params: {
         rpc: {
           getCoinbase: () => "0x1000000000000000000000000000000000000000",
-          transact: (p) => {
+          transact: (p, _, onSent, onSuccess, onFailed) => {
             assert.strictEqual(p.name, "migrateBalances");
             assert.deepEqual(p.params, [[
               "0x0000000000000000000000000000000000000b0b",
@@ -120,11 +120,10 @@ describe("lib/migrate-rep", () => {
             ]]);
             assert.strictEqual(p.from, "0x1000000000000000000000000000000000000000");
             assert.strictEqual(p.to, constants.REP_CONTRACT_ADDRESS);
-            assert.strictEqual(p.returns, "null");
-            assert.isFunction(p.onSent);
-            assert.isFunction(p.onSuccess);
-            assert.isFunction(p.onFailed);
-            p.onSuccess({});
+            assert.isFunction(onSent);
+            assert.isFunction(onSuccess);
+            assert.isFunction(onFailed);
+            onSuccess({});
           }
         },
         repAddressChunk: [
@@ -148,7 +147,7 @@ describe("lib/migrate-rep", () => {
       description: "Migrate Rep",
       params: {
         rpc: {
-          transact: (p) => {
+          transact: (p, _, onSent, onSuccess, onFailed) => {
             assert.strictEqual(p.name, "migrateBalances");
             assert.deepEqual(p.params, [[
               "0x0000000000000000000000000000000000000b0b",
@@ -157,11 +156,10 @@ describe("lib/migrate-rep", () => {
             ]]);
             assert.strictEqual(p.from, "0x1000000000000000000000000000000000000000");
             assert.strictEqual(p.to, constants.REP_CONTRACT_ADDRESS);
-            assert.strictEqual(p.returns, "null");
-            assert.isFunction(p.onSent);
-            assert.isFunction(p.onSuccess);
-            assert.isFunction(p.onFailed);
-            p.onSuccess({});
+            assert.isFunction(onSent);
+            assert.isFunction(onSuccess);
+            assert.isFunction(onFailed);
+            onSuccess({});
           }
         },
         allRepAddresses: [

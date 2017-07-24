@@ -19,6 +19,7 @@
   "dependencies": {
     "async": "2.5.0",
     "augur-abi": "1.3.0",
+    "bignumber.js": "^4.0.2",
     "ethrpc": "4.2.0"
   },
   "devDependencies": {

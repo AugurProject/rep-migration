@@ -72,7 +72,7 @@ describe("lib/verify-rep-migration", () => {
         rpc: {
           callContractFunction: (p, callback) => {
             if (p.name === "totalSupply") {
-              callback("0x0000000000000000000000000000000000000000000000000000000000a7d8c1");
+              callback("0x00000000000000000000000000000000000000000009195731e2ce35eb000001");
             } else {
               callback("0x0000000000000000000000000000000000000000000000000000000000000001");
             }
@@ -85,7 +85,7 @@ describe("lib/verify-rep-migration", () => {
         ]
       },
       assertions: (err) => {
-        assert.strictEqual(err, "Inconsistent total supply: 0x0000000000000000000000000000000000000000000000000000000000a7d8c0 0x0000000000000000000000000000000000000000000000000000000000a7d8c1")
+        assert.strictEqual(err, "Inconsistent total supply: 0x00000000000000000000000000000000000000000009195731e2ce35eb000000 0x00000000000000000000000000000000000000000009195731e2ce35eb000001")
       }
     });
     test({

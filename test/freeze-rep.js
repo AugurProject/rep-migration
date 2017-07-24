@@ -5,14 +5,13 @@ const constants = require("../lib/constants");
 describe("lib/freeze-rep", () => {
   describe("freezeRep", () => {
     const test = t => it(t.description, () => {
-      freezeRep(t.params.rpc, t.assertions);
+      freezeRep(t.params.rpc, t.params.senderAddress, t.assertions);
     });
     test({
       description: "Freeze legacy REP contract",
       params: {
         rpc: {
-          getCoinbase: () => "0x1000000000000000000000000000000000000000",
-          transact: (p) => {
+          transact: (p, _, onSent, onSuccess, onFailed) => {
             assert.strictEqual(p.name, "transfer");
             assert.deepEqual(p.params, [
               constants.LEGACY_REP_CREATION_OVERFLOW_ADDRESS,
@@ -20,12 +19,13 @@ describe("lib/freeze-rep", () => {
             ]);
             assert.strictEqual(p.from, "0x1000000000000000000000000000000000000000");
             assert.strictEqual(p.to, constants.LEGACY_REP_CONTRACT_ADDRESS);
-            assert.isFunction(p.onSent);
-            assert.isFunction(p.onSuccess);
-            assert.isFunction(p.onFailed);
-            p.onSuccess({});
+            assert.isFunction(onSent);
+            assert.isFunction(onSuccess);
+            assert.isFunction(onFailed);
+            onSuccess({});
           }
-        }
+        },
+        senderAddress: "0x1000000000000000000000000000000000000000"
       },
       assertions: (err) => {
         assert.isNull(err);
