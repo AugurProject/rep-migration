@@ -104,7 +104,7 @@ describe("lib/migrate-rep", () => {
   });
   describe("migrateRepChunk", () => {
     const test = t => it(t.description, () => {
-      lib.migrateRepChunk(t.params.rpc, t.params.repAddressChunk, t.params.repContractAddress, t.params.senderAddress, t.assertions);
+      lib.migrateRepChunk(t.params.rpc, t.params.repAddressChunk, t.params.repContractAddress, t.params.senderAddress, () => {}, t.assertions);
     });
     test({
       description: "Migrate a chunk of Rep addresses",
@@ -141,7 +141,7 @@ describe("lib/migrate-rep", () => {
   });
   describe("migrateRep", () => {
     const test = t => it(t.description, () => {
-      lib.migrateRep(t.params.rpc, t.params.allRepAddresses, t.params.repContractAddress, t.params.senderAddress, t.assertions);
+      lib.migrateRep(t.params.rpc, t.params.allRepAddresses, t.params.repContractAddress, t.params.senderAddress, () => {}, t.assertions);
     });
     test({
       description: "Migrate Rep",
@@ -197,11 +197,11 @@ describe("lib/migrate-rep", () => {
       }, () => {
         assert.notEqual(rpc.getNetworkID(), "1");
         rpc.eth.blockNumber((blockNumber) => {
-          lib.migrateRep(rpc, [nonZeroHolder1, nonZeroHolder2], rep.address, owner, (err) => {
-            assert.isNull(err);
+          lib.migrateRep(rpc, [nonZeroHolder1, nonZeroHolder2], rep.address, owner, (sentResponse) => {
+            assert.strictEqual(sentResponse.callReturn, "0x0000000000000000000000000000000000000000000000000000000000000001");
             rpc.resetState();
             done();
-          });
+          }, () => {});
         });
       });
     });
