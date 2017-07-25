@@ -4,7 +4,7 @@ const RepToken = artifacts.require('RepToken')
 const LegacyRepToken = artifacts.require('LegacyRepToken')
 
 async function deploy(deployer) {
-  if (web3.net.version === "1" || web3.net.version === "4") {
+  if (process.env.EXPECTED_NETWORK_ID === '1' || process.env.EXPECTED_NETWORK_ID === '4') {
     await deployer.deploy(RepToken, LEGACY_REP_CONTRACT_ADDRESS)
   } else {
     await deployer.deploy(LegacyRepToken)
