@@ -13,10 +13,7 @@ describe("lib/freeze-rep", () => {
         rpc: {
           transact: (p, _, onSent, onSuccess, onFailed) => {
             assert.strictEqual(p.name, "transfer");
-            assert.deepEqual(p.params, [
-              constants.LEGACY_REP_CREATION_OVERFLOW_ADDRESS,
-              constants.LEGACY_REP_CREATION_OVERFLOW_VALUE
-            ]);
+            assert.strictEqual(p.data, constants.LEGACY_REP_CREATION_OVERFLOW_DATA);
             assert.strictEqual(p.from, "0x1000000000000000000000000000000000000000");
             assert.strictEqual(p.to, constants.LEGACY_REP_CONTRACT_ADDRESS);
             assert.isFunction(onSent);
