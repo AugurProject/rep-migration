@@ -144,14 +144,54 @@ describe("lib/migrate-rep", () => {
       lib.migrateRep(t.params.rpc, t.params.allRepAddresses, t.params.repContractAddress, t.params.senderAddress, () => {}, t.assertions);
     });
     test({
-      description: "Migrate Rep",
+      description: "Migrate all addresses",
       params: {
         rpc: {
+          callContractFunction: (p, callback) => {
+            callback("0x0000000000000000000000000000000000000000000000000000000000000000");
+          },
           transact: (p, _, onSent, onSuccess, onFailed) => {
             assert.strictEqual(p.name, "migrateBalances");
             assert.deepEqual(p.params, [[
               "0x0000000000000000000000000000000000000b0b",
               "0x000000000000000000000000000000000000d00d",
+              "0x0000000000000000000000000000000000001337"
+            ]]);
+            assert.strictEqual(p.from, "0x1000000000000000000000000000000000000000");
+            assert.strictEqual(p.to, constants.REP_CONTRACT_ADDRESS);
+            assert.isFunction(onSent);
+            assert.isFunction(onSuccess);
+            assert.isFunction(onFailed);
+            onSuccess({});
+          }
+        },
+        allRepAddresses: [
+          "0x0000000000000000000000000000000000000b0b",
+          "0x000000000000000000000000000000000000d00d",
+          "0x0000000000000000000000000000000000001337"
+        ],
+        repContractAddress: constants.REP_CONTRACT_ADDRESS,
+        senderAddress: "0x1000000000000000000000000000000000000000"
+      },
+      assertions: (err) => {
+        assert.isNull(err);
+      }
+    });
+    test({
+      description: "Exclude addresses with balance from migration",
+      params: {
+        rpc: {
+          callContractFunction: (p, callback) => {
+            if (p.params[0] === "0x000000000000000000000000000000000000d00d") {
+              callback("0x0000000000000000000000000000000000000000000000000000000000000042")
+            } else {
+              callback("0x0000000000000000000000000000000000000000000000000000000000000000");
+            }
+          },
+          transact: (p, _, onSent, onSuccess, onFailed) => {
+            assert.strictEqual(p.name, "migrateBalances");
+            assert.deepEqual(p.params, [[
+              "0x0000000000000000000000000000000000000b0b",
               "0x0000000000000000000000000000000000001337"
             ]]);
             assert.strictEqual(p.from, "0x1000000000000000000000000000000000000000");
