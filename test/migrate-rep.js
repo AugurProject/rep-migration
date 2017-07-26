@@ -186,7 +186,7 @@ describe("lib/migrate-rep", () => {
       await legacyRep.unpause({ from: owner });
       await legacyRep.transfer(nonZeroHolder1, nonZeroAmount1, { from: zeroHolder });
       await legacyRep.transfer(nonZeroHolder2, nonZeroAmount2, { from: zeroHolder });
-      rep = await RepToken.new(legacyRep.address, { from: owner });
+      rep = await RepToken.new(legacyRep.address, new BigNumber("10", 10).toPower(18), owner, { from: owner });
     });
     it("Should migrate REP held by nonZeroHolder1 and nonZeroHolder2", (done) => {
       rpc.connect({

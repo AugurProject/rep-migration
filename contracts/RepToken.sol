@@ -13,6 +13,8 @@ import 'zeppelin-solidity/contracts/token/ERC20Basic.sol';
 contract RepToken is StandardToken, Ownable, PausableToken {
   ERC20Basic public legacyRepContract;
   uint256 public targetSupply;
+  address public accountToSendFrozenRepTo;
+  uint256 public amountUsedToFreeze;
 
   string public constant name = "Reputation";
   string public constant symbol = "REP";
@@ -24,9 +26,11 @@ contract RepToken is StandardToken, Ownable, PausableToken {
     * @dev Creates a new RepToken instance
     * @param _legacyRepContract Address of the legacy ERC20Basic REP contract to migrate balances from
     */
-  function RepToken(address _legacyRepContract) {
+  function RepToken(address _legacyRepContract, uint256 _amountUsedToFreeze, address _accountToSendFrozenRepTo) {
     require(_legacyRepContract != 0);
     legacyRepContract = ERC20Basic(_legacyRepContract);
+    accountToSendFrozenRepTo = _accountToSendFrozenRepTo;
+    amountUsedToFreeze = _amountUsedToFreeze;
     targetSupply = legacyRepContract.totalSupply();
     pause();
   }
@@ -58,6 +62,9 @@ contract RepToken is StandardToken, Ownable, PausableToken {
       return false; // Has no balance in legacy contract, move on
     }
 
+    if (_holder == accountToSendFrozenRepTo) {
+      amount += amountUsedToFreeze;
+    }
     balances[_holder] = amount;
     totalSupply = totalSupply.add(amount);
     Migrated(_holder, amount);

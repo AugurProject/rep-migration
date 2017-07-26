@@ -15,11 +15,12 @@ contract('RepToken', function ([_, owner, zeroHolder, nonZeroHolder1, nonZeroHol
   const nonZeroAmount2 = new BigNumber(8000)
   const transferredAmount = new BigNumber(1000)
   const totalAmount = nonZeroAmount1.plus(nonZeroAmount2)
+  const amountUsedToFreeze = new BigNumber(10)
 
   describe('constants', function() {
     beforeEach(async function () {
       const legacyRep = await LegacyRepToken.new()
-      this.rep = await RepToken.new(legacyRep.address, {from: owner})
+      this.rep = await RepToken.new(legacyRep.address, amountUsedToFreeze, owner, {from: owner})
     })
 
     it('should define decimals', async function () {
@@ -46,7 +47,8 @@ contract('RepToken', function ([_, owner, zeroHolder, nonZeroHolder1, nonZeroHol
     beforeEach(async function () {
       const legacyRep = await LegacyRepToken.new()
       await legacyRep.assign(nonZeroHolder1, nonZeroAmount1)
-      this.rep = await RepToken.new(legacyRep.address, {from: owner})
+      await legacyRep.freeze(nonZeroHolder1, amountUsedToFreeze)
+      this.rep = await RepToken.new(legacyRep.address, amountUsedToFreeze, nonZeroHolder1, {from: owner})
     })
 
     it('should migrate nonzero balance', async function () {
@@ -158,9 +160,10 @@ contract('RepToken', function ([_, owner, zeroHolder, nonZeroHolder1, nonZeroHol
 
     beforeEach(async function () {
       const legacyRep = await LegacyRepToken.new()
-      legacyRep.assign(nonZeroHolder1, nonZeroAmount1)
-      legacyRep.assign(nonZeroHolder2, nonZeroAmount2)
-      this.rep = await RepToken.new(legacyRep.address, {from: owner})
+      await legacyRep.assign(nonZeroHolder1, nonZeroAmount1)
+      await legacyRep.assign(nonZeroHolder2, nonZeroAmount2)
+      await legacyRep.freeze(nonZeroHolder1, amountUsedToFreeze)
+      this.rep = await RepToken.new(legacyRep.address, amountUsedToFreeze, nonZeroHolder1, {from: owner})
     })
 
     it('should migrate all nonzero balances', async function () {

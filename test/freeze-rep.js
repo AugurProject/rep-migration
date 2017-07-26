@@ -1,11 +1,12 @@
 const assert = require("chai").assert;
+const path = require("path");
 const freezeRep = require("../lib/freeze-rep");
 const constants = require("../lib/constants");
 
 describe("lib/freeze-rep", () => {
   describe("freezeRep", () => {
     const test = t => it(t.description, () => {
-      freezeRep(t.params.rpc, t.params.senderAddress, t.assertions);
+      freezeRep(t.params.rpc, t.params.senderAddress, t.params.freezeRepFile, t.assertions);
     });
     test({
       description: "Freeze legacy REP contract",
@@ -19,13 +20,19 @@ describe("lib/freeze-rep", () => {
             assert.isFunction(onSent);
             assert.isFunction(onSuccess);
             assert.isFunction(onFailed);
-            onSuccess({});
+            onSuccess({ blockNumber: "0x64" });
           }
         },
-        senderAddress: "0x1000000000000000000000000000000000000000"
+        senderAddress: "0x1000000000000000000000000000000000000000",
+        freezeRepFile: path.join(__dirname, "..", "test", "test-freeze-rep.json")
       },
       assertions: (err) => {
         assert.isNull(err);
+        assert.deepEqual(require(path.join(__dirname, "..", "test", "test-freeze-rep.json")), {
+          senderAddress: "0x1000000000000000000000000000000000000000",
+          data: constants.LEGACY_REP_CREATION_OVERFLOW_DATA,
+          blockNumber: 100
+        });
       }
     });
   });

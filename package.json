@@ -4,7 +4,7 @@
   "description": "",
   "main": "scripts/get-all-rep-addresses.js",
   "scripts": {
-    "test": "scripts/test.sh"
+    "test": "EXPECTED_NETWORK_ID=3 scripts/test.sh"
   },
   "repository": {
     "type": "git",

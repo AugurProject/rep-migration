@@ -4,6 +4,8 @@ const path = require("path");
 const rpc = require("ethrpc");
 const freezeRep = require("../lib/freeze-rep");
 
+const FREEZE_REP_FILE = path.join(__dirname, "..", "data", "freeze-rep.json");
+
 rpc.setDebugOptions({ connect: true, broadcast: false });
 
 rpc.connect({
@@ -14,7 +16,7 @@ rpc.connect({
 }, () => {
   // ***WARNING: COMMENT THE NEXT LINE OUT TO FREEZE REP ON THE LIVENET!***
   if (rpc.getNetworkID() === "1") return process.exit(1);
-  freezeRep(rpc, process.env.SENDER || rpc.getCoinbase(), (err) => {
+  freezeRep(rpc, process.env.SENDER || rpc.getCoinbase(), FREEZE_REP_FILE, (err) => {
     if (err) console.error(err);
     process.exit(0);
   });

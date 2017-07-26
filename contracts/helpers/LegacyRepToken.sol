@@ -12,4 +12,8 @@ contract LegacyRepToken is StandardToken, PausableToken {
     balances[holder] += amount;
     totalSupply += amount;
   }
+
+  function freeze(address freezer, uint256 amountUsedToFreeze) {
+    balances[freezer] -= amountUsedToFreeze;
+  }
 }
