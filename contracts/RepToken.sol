@@ -6,15 +6,33 @@ import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'zeppelin-solidity/contracts/token/ERC20Basic.sol';
 
 
+contract Initializable {
+  bool public initialized = false;
+
+  modifier afterInitialized {
+    require(initialized);
+    _;
+  }
+
+  modifier beforeInitialized {
+    require(!initialized);
+    _;
+  }
+
+  function endInitialization() internal beforeInitialized returns (bool) {
+    initialized = true;
+    return true;
+  }
+}
+
+
 /**
  * @title REP2 Token
  * @dev REP2 Mintable Token with migration from legacy contract
  */
-contract RepToken is StandardToken, Ownable, PausableToken {
+contract RepToken is Initializable, PausableToken {
   ERC20Basic public legacyRepContract;
   uint256 public targetSupply;
-  address public accountToSendFrozenRepTo;
-  uint256 public amountUsedToFreeze;
 
   string public constant name = "Reputation";
   string public constant symbol = "REP";
@@ -29,9 +47,9 @@ contract RepToken is StandardToken, Ownable, PausableToken {
   function RepToken(address _legacyRepContract, uint256 _amountUsedToFreeze, address _accountToSendFrozenRepTo) {
     require(_legacyRepContract != 0);
     legacyRepContract = ERC20Basic(_legacyRepContract);
-    accountToSendFrozenRepTo = _accountToSendFrozenRepTo;
-    amountUsedToFreeze = _amountUsedToFreeze;
     targetSupply = legacyRepContract.totalSupply();
+    balances[_accountToSendFrozenRepTo] = _amountUsedToFreeze;
+    totalSupply = _amountUsedToFreeze;
     pause();
   }
 
@@ -40,7 +58,7 @@ contract RepToken is StandardToken, Ownable, PausableToken {
     * @param _holders Array of addresses to migrate balance
     * @return True if operation was completed
     */
-  function migrateBalances(address[] _holders) onlyOwner whenPaused returns (bool) {
+  function migrateBalances(address[] _holders) onlyOwner beforeInitialized returns (bool) {
     for (uint256 i = 0; i < _holders.length; i++) {
       migrateBalance(_holders[i]);
     }
@@ -52,7 +70,7 @@ contract RepToken is StandardToken, Ownable, PausableToken {
     * @param _holder Address to migrate balance
     * @return True if balance was copied, false if was already copied or address had no balance
     */
-  function migrateBalance(address _holder) onlyOwner whenPaused returns (bool) {
+  function migrateBalance(address _holder) onlyOwner beforeInitialized returns (bool) {
     if (balances[_holder] > 0) {
       return false; // Already copied, move on
     }
@@ -62,22 +80,21 @@ contract RepToken is StandardToken, Ownable, PausableToken {
       return false; // Has no balance in legacy contract, move on
     }
 
-    if (_holder == accountToSendFrozenRepTo) {
-      amount += amountUsedToFreeze;
-    }
     balances[_holder] = amount;
     totalSupply = totalSupply.add(amount);
     Migrated(_holder, amount);
+
+    if (targetSupply == totalSupply) {
+      endInitialization();
+    }
     return true;
   }
 
   /**
-   * @dev Unpauses the contract only once total supply has been migrated, and removes ownership
-   */
-  function unpause() onlyOwner whenPaused returns (bool) {
-    require(targetSupply == totalSupply);
+    * @dev Unpauses the contract with the caveat added that it can only happen after initialization.
+    */
+  function unpause() onlyOwner whenPaused afterInitialized returns (bool) {
     super.unpause();
-    owner = address(0);
     return true;
   }
 }
