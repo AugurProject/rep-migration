@@ -14,8 +14,7 @@ rpc.connect({
   ipcAddresses: [process.env.GETH_IPC || path.join(process.env.HOME, ".ethereum", "geth.ipc")],
   errorHandler: () => {}
 }, () => {
-  // ***WARNING: COMMENT THE NEXT LINE OUT TO FREEZE REP ON THE LIVENET!***
-  if (rpc.getNetworkID() === "1") return process.exit(1);
+  if (rpc.getNetworkID() !== process.env.EXPECTED_NETWORK_ID) return process.exit(1);
   freezeRep(rpc, process.env.SENDER || rpc.getCoinbase(), FREEZE_REP_FILE, (err) => {
     if (err) console.error(err);
     process.exit(0);
