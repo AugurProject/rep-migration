@@ -12,7 +12,7 @@ const RepTokenContract = web3.eth.contract(RepToken.abi);
 
 const networkID = process.env.EXPECTED_NETWORK_ID;
 
-RepTokenContract.new(constants.LEGACY_REP_CONTRACT_ADDRESS, new BigNumber("10", 10).toPower(18), constants.LEGACY_REP_FREEZE_ADDRESS, {
+RepTokenContract.new(constants.LEGACY_REP_CONTRACT_ADDRESS, new BigNumber("10", 10).toPower(18), constants.LEGACY_REP_FROZEN_REP_RECIPIENT_ADDRESS, {
   data: RepToken.unlinked_binary,
   from: process.env.SENDER,
   gas: 4000000
