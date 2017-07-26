@@ -29,7 +29,7 @@ describe("lib/freeze-rep", () => {
             if (++testTransferCallCount === 1) {
               callback("0x0000000000000000000000000000000000000000000000000000000000000001");
             } else {
-              callback("0x");
+              callback({ error: "0x" });
             }
           },
           transact: (p, _, onSent, onSuccess, onFailed) => {
@@ -67,7 +67,7 @@ describe("lib/freeze-rep", () => {
               from: "0x1000000000000000000000000000000000000000",
               to: constants.LEGACY_REP_CONTRACT_ADDRESS
             });
-            callback("0x");
+            callback({ error: "0x" });
           },
           transact: (p, _, onSent, onSuccess, onFailed) => {
             assert.strictEqual(p.name, "transfer");
