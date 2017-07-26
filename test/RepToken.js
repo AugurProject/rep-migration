@@ -20,7 +20,7 @@ contract('RepToken', function ([_, owner, zeroHolder, nonZeroHolder1, nonZeroHol
   describe('constants', function() {
     beforeEach(async function () {
       const legacyRep = await LegacyRepToken.new()
-      this.rep = await RepToken.new(legacyRep.address, amountUsedToFreeze, owner, {from: owner})
+      this.rep = await RepToken.new(legacyRep.address, amountUsedToFreeze, nonZeroHolder1, {from: owner})
     })
 
     it('should define decimals', async function () {
