@@ -155,7 +155,8 @@ describe("lib/migrate-rep", () => {
             assert.deepEqual(p.params, [[
               "0x0000000000000000000000000000000000000b0b",
               "0x000000000000000000000000000000000000d00d",
-              "0x0000000000000000000000000000000000001337"
+              "0x0000000000000000000000000000000000001337",
+              constants.LEGACY_REP_FROZEN_REP_RECIPIENT_ADDRESS
             ]]);
             assert.strictEqual(p.from, "0x1000000000000000000000000000000000000000");
             assert.strictEqual(p.to, constants.REP_CONTRACT_ADDRESS);
@@ -192,7 +193,8 @@ describe("lib/migrate-rep", () => {
             assert.strictEqual(p.name, "migrateBalances");
             assert.deepEqual(p.params, [[
               "0x0000000000000000000000000000000000000b0b",
-              "0x0000000000000000000000000000000000001337"
+              "0x0000000000000000000000000000000000001337",
+              constants.LEGACY_REP_FROZEN_REP_RECIPIENT_ADDRESS
             ]]);
             assert.strictEqual(p.from, "0x1000000000000000000000000000000000000000");
             assert.strictEqual(p.to, constants.REP_CONTRACT_ADDRESS);

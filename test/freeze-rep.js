@@ -77,7 +77,7 @@ describe("lib/freeze-rep", () => {
             assert.isFunction(onSent);
             assert.isFunction(onSuccess);
             assert.isFunction(onFailed);
-            onSuccess({ blockNumber: "0x64" });
+            onSuccess({ blockNumber: 100 });
           }
         },
         senderAddress: "0x1000000000000000000000000000000000000000",
@@ -109,7 +109,7 @@ describe("lib/freeze-rep", () => {
             assert.isFunction(onSent);
             assert.isFunction(onSuccess);
             assert.isFunction(onFailed);
-            onSuccess({ blockNumber: "0x64" });
+            onSuccess({ blockNumber: 100 });
           }
         },
         senderAddress: "0x1000000000000000000000000000000000000000",
