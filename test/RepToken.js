@@ -57,13 +57,13 @@ contract('RepToken', function ([_, owner, zeroHolder, nonZeroHolder1, nonZeroHol
     it('should migrate nonzero balance', async function () {
       await this.rep.migrateBalances([nonZeroHolder1], {from: owner})
 
+      await this.rep.initialized().should.eventually.equal(true)
       await this.rep.balanceOf(nonZeroHolder1).then(balance => {
         balance.should.bignumber.equal(nonZeroAmount1)
       })
       await this.rep.balanceOf(freezer).then(balance => {
         balance.should.bignumber.equal(amountUsedToFreeze)
       })
-
       await this.rep.totalSupply().then(totalSupply => {
         totalSupply.should.bignumber.equal(this.targetTotalSupply)
       })
@@ -79,6 +79,13 @@ contract('RepToken', function ([_, owner, zeroHolder, nonZeroHolder1, nonZeroHol
       await this.rep.totalSupply().then(totalSupply => {
         totalSupply.should.bignumber.equal(this.targetTotalSupply)
       })
+    })
+
+    it('should not allow migration after initialized', async function() {
+      await this.rep.initialized().should.eventually.equal(false)
+      await this.rep.migrateBalances([nonZeroHolder1], {from: owner})
+      await this.rep.initialized().should.eventually.equal(true)
+      await this.rep.migrateBalances([nonZeroHolder1], {from: owner}).should.be.rejectedWith(EVMThrow)
     })
 
     it('should not allow unpause before complete', async function () {
