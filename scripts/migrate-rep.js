@@ -23,7 +23,10 @@ rpc.connect({
 }, () => {
   migrateRep(rpc, allRepAddresses, constants.REP_CONTRACT_ADDRESS, process.env.SENDER || rpc.getCoinbase(), () => {}, (err) => {
     console.log("Time elapsed:", (Date.now() - startTime) / 1000 / 60, "minutes");
-    if (err) console.error(err);
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
     process.exit(0);
   });
 });

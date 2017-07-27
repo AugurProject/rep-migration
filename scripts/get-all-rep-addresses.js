@@ -19,7 +19,10 @@ rpc.connect({
 }, () => {
   getAllRepAddresses(rpc, allRepAddresses, constants.LEGACY_REP_CONTRACT_ADDRESS, constants.REP_ADDRESS_FILE, constants.LEGACY_REP_CONTRACT_UPLOAD_BLOCK, constants.LEGACY_REP_FREEZE_BLOCK, constants.BLOCKS_PER_CHUNK, (err) => {
     console.log("Time elapsed:", (Date.now() - startTime) / 1000 / 60, "minutes");
-    if (err) console.error(err);
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
     process.exit(0);
   });
 });
