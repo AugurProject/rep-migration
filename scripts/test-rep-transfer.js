@@ -24,7 +24,8 @@ rpc.connect({
   rpc.callContractFunction(testTransferPayload, (testTransferResponse) => {
     console.log("Time elapsed:", (Date.now() - startTime) / 1000 / 60, "minutes");
     if (testTransferResponse !== "0x0000000000000000000000000000000000000000000000000000000000000001") {
-      throw new Error("Test REP transfer failed");
+      console.error("Test REP transfer failed");
+      process.exit(1);
     }
     process.exit(0);
   });

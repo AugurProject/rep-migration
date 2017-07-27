@@ -2,9 +2,7 @@
 
 const path = require("path");
 const rpc = require("ethrpc");
-const freezeRep = require("../lib/freeze-rep");
-
-const FREEZE_REP_FILE = path.join(__dirname, "..", "data", "freeze-rep.json");
+const unpause = require("../lib/unpause");
 
 rpc.setDebugOptions({ connect: true, broadcast: false });
 
@@ -14,8 +12,7 @@ rpc.connect({
   ipcAddresses: [process.env.GETH_IPC || path.join(process.env.HOME, ".ethereum", "geth.ipc")],
   errorHandler: () => {}
 }, () => {
-  if (rpc.getNetworkID() !== process.env.EXPECTED_NETWORK_ID) return process.exit(1);
-  freezeRep(rpc, process.env.SENDER || rpc.getCoinbase(), FREEZE_REP_FILE, (err) => {
+  unpause(rpc, process.env.SENDER || rpc.getCoinbase(), (err) => {
     if (err) {
       console.error(err);
       process.exit(1);
