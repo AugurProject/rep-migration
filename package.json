@@ -4,7 +4,8 @@
   "description": "",
   "main": "scripts/get-all-rep-addresses.js",
   "scripts": {
-    "test": "scripts/test.sh"
+    "test": "scripts/test.sh",
+    "lint": "eslint lib scripts"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "chai": "^4.1.0",
     "chai-as-promised": "^7.1.1",
     "chai-bignumber": "^2.0.1",
+    "eslint": "^4.3.0",
     "ethereumjs-testrpc": "^3.0.2",
     "truffle": "^3.4.4",
     "zeppelin-solidity": "^1.2.0"
