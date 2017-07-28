@@ -10,5 +10,9 @@
   "4": {
     "contractAddress": "0xbc48f2465515f4a2b9154ad66ff487497128c6e7",
     "contractUploadBlock": 590387
+  },
+  "10101": {
+    "contractAddress": "0x0bd7b480637a77d9c4226a2b793768fc6c849124",
+    "contractUploadBlock": 2
   }
 }
