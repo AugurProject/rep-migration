@@ -15,7 +15,7 @@ const networkID = process.env.EXPECTED_NETWORK_ID;
 RepTokenContract.new(constants.LEGACY_REP_CONTRACT_ADDRESS, new BigNumber("10", 10).toPower(18), constants.LEGACY_REP_FROZEN_REP_RECIPIENT_ADDRESS, {
   data: RepToken.unlinked_binary,
   from: process.env.SENDER,
-  gas: 4000000
+  gas: 4000000,
 }, (err, contractInstance) => {
   if (contractInstance && contractInstance.address && networkID) {
     if (!RepToken.networks[networkID]) RepToken.networks[networkID] = {};

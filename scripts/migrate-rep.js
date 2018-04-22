@@ -19,7 +19,7 @@ rpc.connect({
   httpAddresses: ["http://127.0.0.1:8545"],
   wsAddresses: ["ws://127.0.0.1:8546"],
   ipcAddresses: [process.env.GETH_IPC || path.join(process.env.HOME, ".ethereum", "geth.ipc")],
-  errorHandler: () => {}
+  errorHandler: () => {},
 }, () => {
   migrateRep(rpc, allRepAddresses, constants.REP_CONTRACT_ADDRESS, process.env.SENDER || rpc.getCoinbase(), () => {}, (err) => {
     console.log("Time elapsed:", (Date.now() - startTime) / 1000 / 60, "minutes");
