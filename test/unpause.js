@@ -4,7 +4,7 @@ const constants = require("../lib/constants");
 
 describe("lib/unpause", () => {
   describe("unpause", () => {
-    let testTransferCallCount
+    let testTransferCallCount;
     const test = t => it(t.description, () => {
       testTransferCallCount = 0;
       try {
@@ -41,7 +41,7 @@ describe("lib/unpause", () => {
             onSuccess({ blockNumber: "0x64" });
           }
         },
-        senderAddress: "0x1000000000000000000000000000000000000000",
+        senderAddress: "0x1000000000000000000000000000000000000000"
       },
       assertions: (err) => {
         assert.isNull(err);
@@ -71,7 +71,7 @@ describe("lib/unpause", () => {
             onSuccess({});
           }
         },
-        senderAddress: "0x1000000000000000000000000000000000000000",
+        senderAddress: "0x1000000000000000000000000000000000000000"
       },
       assertions: (err) => {
         assert.strictEqual(err, "Pre-unpause REP transfer succeeded (expected failure)");
@@ -101,7 +101,7 @@ describe("lib/unpause", () => {
             onSuccess({});
           }
         },
-        senderAddress: "0x1000000000000000000000000000000000000000",
+        senderAddress: "0x1000000000000000000000000000000000000000"
       },
       assertions: (err) => {
         assert.strictEqual(err, "Post-unpause REP transfer failed (expected success)");

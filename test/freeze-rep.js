@@ -5,7 +5,7 @@ const constants = require("../lib/constants");
 
 describe("lib/freeze-rep", () => {
   describe("freezeRep", () => {
-    let testTransferCallCount
+    let testTransferCallCount;
     const test = t => it(t.description, () => {
       testTransferCallCount = 0;
       try {
