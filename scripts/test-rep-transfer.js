@@ -1,17 +1,18 @@
 #!/usr/bin/env node
 
 const path = require("path");
-const rpc = require("ethrpc");
+const Augur = require("augur.js");
+const augur = new Augur();
 const constants = require("../lib/constants");
 
-rpc.setDebugOptions({ connect: true, broadcast: false });
+augur.rpc.setDebugOptions({ connect: true, broadcast: false });
 
 const startTime = Date.now();
 
-rpc.connect({
+augur.connect({
   httpAddresses: ["http://127.0.0.1:8545"],
   wsAddresses: ["ws://127.0.0.1:8546"],
-  ipcAddresses: [process.env.GETH_IPC || path.join(process.env.HOME, ".ethereum", "geth.ipc")],
+  // ipcAddresses: [process.env.ETHEREUM_IPC || path.join(process.env.HOME, ".ethereum", "geth.ipc")],
   errorHandler: () => {},
 }, () => {
   const testTransferPayload = {
@@ -21,7 +22,7 @@ rpc.connect({
     from: process.env.SENDER,
     to: constants.REP_CONTRACT_ADDRESS,
   };
-  rpc.callContractFunction(testTransferPayload, (testTransferResponse) => {
+  augur.rpc.callContractFunction(testTransferPayload, (testTransferResponse) => {
     console.log("Time elapsed:", (Date.now() - startTime) / 1000 / 60, "minutes");
     if (testTransferResponse !== "0x0000000000000000000000000000000000000000000000000000000000000001") {
       console.error("Test REP transfer failed");

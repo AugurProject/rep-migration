@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 
 const path = require("path");
-const rpc = require("ethrpc");
+const Augur = require("augur.js");
+const augur = new Augur();
 const unpause = require("../lib/unpause");
 
-rpc.setDebugOptions({ connect: true, broadcast: false });
+augur.rpc.setDebugOptions({ connect: true, broadcast: false });
 
-rpc.connect({
+augur.connect({
   httpAddresses: ["http://127.0.0.1:8545"],
   wsAddresses: ["ws://127.0.0.1:8546"],
-  ipcAddresses: [process.env.GETH_IPC || path.join(process.env.HOME, ".ethereum", "geth.ipc")],
+  // ipcAddresses: [process.env.ETHEREUM_IPC || path.join(process.env.HOME, ".ethereum", "geth.ipc")],
   errorHandler: () => {},
 }, () => {
   unpause(rpc, process.env.SENDER || rpc.getCoinbase(), (err) => {

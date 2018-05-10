@@ -1,6 +1,7 @@
 const assert = require("chai").assert;
 const BigNumber = require("bignumber.js");
-const rpc = require("ethrpc");
+const Augur = require("augur.js");
+const augur = new Augur();
 const lib = require("../lib/migrate-rep");
 const constants = require("../lib/constants");
 
@@ -231,17 +232,17 @@ describe("lib/migrate-rep", () => {
       rep = await RepToken.new(legacyRep.address, new BigNumber("10", 10).toPower(18), nonZeroHolder1, { from: owner });
     });
     it("Should migrate REP held by nonZeroHolder1 and nonZeroHolder2", (done) => {
-      rpc.connect({
+      augur.connect({
         httpAddresses: ["http://127.0.0.1:8545"],
         wsAddresses: [],
         ipcAddresses: [],
         errorHandler: () => {}
       }, () => {
         assert.notEqual(rpc.getNetworkID(), "1");
-        rpc.eth.blockNumber((blockNumber) => {
+        augur.rpc.eth.blockNumber((blockNumber) => {
           lib.migrateRep(rpc, [nonZeroHolder1, nonZeroHolder2], rep.address, owner, (sentResponse) => {
             assert.strictEqual(sentResponse.callReturn, "0x0000000000000000000000000000000000000000000000000000000000000001");
-            rpc.resetState();
+            augur.rpc.resetState();
             done();
           }, () => {});
         });
