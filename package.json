@@ -19,7 +19,7 @@
   "homepage": "https://github.com/tinybike/rep-migration#readme",
   "dependencies": {
     "async": "2.5.0",
-    "augur.js": "4.10.2-0",
+    "augur.js": "4.11.0-9",
     "speedomatic": "2.1.4",
     "web3": "0.19.0"
   },
