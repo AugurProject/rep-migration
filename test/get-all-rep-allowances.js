@@ -12,7 +12,7 @@ const LegacyRepToken = artifacts.require("LegacyRepToken");
 const TEST_REP_OWNERS_FILE = path.join(__dirname, "test-rep-allowance-owners-file.txt");
 const TEST_REP_SPENDERS_FILE = path.join(__dirname, "test-rep-allowance-spenders-file.txt");
 
-describe("lib/get-all-rep-addresses", () => {
+describe("lib/get-all-rep-allowances", () => {
   contract("RepToken", function ([_, owner, zeroHolder, nonZeroHolder1, nonZeroHolder2]) {
     const nonZeroAmount1 = new BigNumber(4000, 10);
     const nonZeroAmount2 = new BigNumber(8000, 10);
@@ -33,7 +33,7 @@ describe("lib/get-all-rep-addresses", () => {
         errorHandler: () => {}
       }, () => {
         assert.notEqual(rpc.getNetworkID(), "1");
-        augur.rpc.eth.blockNumber((blockNumber) => {
+        augur.rpc.eth.blockNumber((err, blockNumber) => {
           lib.getAllRepAllowances(rpc, [], [], legacyRep.address, TEST_REP_OWNERS_FILE, TEST_REP_SPENDERS_FILE, 0, parseInt(blockNumber, 16), constants.BLOCKS_PER_CHUNK, (err) => {
             assert.isNull(err);
             fs.readFile(TEST_REP_OWNERS_FILE, "utf8", (err, allRepAddresses) => {
