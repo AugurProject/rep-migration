@@ -3,7 +3,7 @@
 const path = require("path");
 const Augur = require("augur.js");
 const constants = require("../lib/constants");
-const getAllRepAddresses = require("../lib/get-all-rep-addresses").getAllRepAddresses;
+const getAllRepAllowances = require("../lib/get-all-rep-allowances").getAllRepAllowances;
 
 const augur = new Augur();
 augur.rpc.setDebugOptions({ connect: true, broadcast: false });
@@ -25,7 +25,7 @@ augur.connect({ ethereumNode, augurNode }, (err, connectionInfo) => {
   if (augur.rpc.getNetworkID() !== process.env.EXPECTED_NETWORK_ID) return process.exit(1);
   // const toBlock = constants.LEGACY_REP_FREEZE_BLOCK;
   const toBlock = parseInt(augur.rpc.getCurrentBlock().number, 16); // TODO: for production, replace this with the block number at which the REP contract was frozen
-  getAllRepAddresses(augur, [], constants.LEGACY_REP_CONTRACT_ADDRESS, constants.REP_ADDRESS_FILE, constants.LEGACY_REP_CONTRACT_UPLOAD_BLOCK, toBlock, constants.BLOCKS_PER_CHUNK, (err) => {
+  getAllRepAllowances(augur, [], [], constants.LEGACY_REP_CONTRACT_ADDRESS, constants.REP_ALLOWANCE_OWNERS_FILE, constants.REP_ALLOWANCE_SPENDERS_FILE,constants.LEGACY_REP_CONTRACT_UPLOAD_BLOCK, toBlock, constants.BLOCKS_PER_CHUNK, (err) => {
     console.log("Time elapsed:", (Date.now() - startTime) / 1000 / 60, "minutes");
     if (err) {
       console.error(err);
